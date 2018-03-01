@@ -34,11 +34,6 @@ int main()
     long long number = 600851475143;
     long long startI = 2;
     std::cin.get();
-    /*std::cout<<bool(10%3)<<'\n';
-    std::cout<<bool(!10%3)<<'\n';
-    std::cout<<bool(10%2)<<'\n';
-    std::cout<<bool(!10%2)<<'\n';
-    std::cout<<(10%2==0)<<'\n';*/
     std::cout<<largestDisvisiblePrime(number, startI)<<'\n';
     std::cout<<"Result is two numbers ago +1. 6857 for 600851475143";
     return 0;
