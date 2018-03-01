@@ -6,9 +6,9 @@ Write your code in this editor and press "Run" button to compile and execute it.
 
 *******************************************************************************/
 /*
-The prime factors of 13195 are 5, 7, 13 and 29.
+A palindromic number reads the same both ways. The largest palindrome made from the product of two 2-digit numbers is 9009 = 91 × 99.
 
-What is the largest prime factor of the number 600851475143 ?
+Find the largest palindrome made from the product of two 3-digit numbers.
 */
 
 #include <iostream>
@@ -32,14 +32,22 @@ bool checkPalindrome(int number){
     }
     for (int i = 0; i < numberOfDigits; i++) {
       if (arr[i]!=arr[numberOfDigits - i - 1]) {
-        return false
+        return false;
       }
     }
-    return true
+    return true;
 }
 
 int main()
 {
-    std::cout << checkPalindrome(313) << std::endl;
+  int i=999;
+  int j=999;
+  for (i=999; i > 900; i--) {
+    for (j=999; j > 900; j--) {
+      if (checkPalindrome(i*j)) {
+        std::cout<<i*j<<'\t'<<i<<'\t'<<j<<'\n';
+      }
+    }
+  }
     return 0;
 }
