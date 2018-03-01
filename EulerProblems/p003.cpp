@@ -12,31 +12,34 @@ What is the largest prime factor of the number 600851475143 ?
 */
 
 #include <iostream>
+#include <math.h>
 
-bool multipleOfA(int number, int a){
-    int multiple = a;
-    int n=0;
-    float m=0;
-    float difference=0;
-    n=number/float(multiple);
-    m=number/float(multiple);
-    difference=m-float(n);
-    if(difference==0){return true;}
-    return false;
-}
-
-int largestDisvisiblePrime(int n){
-  for (int i = 2; i < n; i++) {
-    if (multipleOfA(n, i)) {
-      largestDisvisiblePrime(n/i);
+long long largestDisvisiblePrime(long long n, long long currentI){
+  std::cout<<n<<'\n';
+  for (long long i = currentI; i < n; i++) {
+    std::cout<<i;
+    if (n%i==0) {
+      std::cout<<'\t'<<i;
+      std::cin.get();
+      largestDisvisiblePrime(n/i, i);
+      break;
     }
+    std::cout<<'\n';
   }
   return n;
 }
 
 int main()
 {
-    int number = 600851475143;
-    std::cout<<largestDisvisiblePrime(number);
+    long long number = 600851475143;
+    long long startI = 2;
+    std::cin.get();
+    /*std::cout<<bool(10%3)<<'\n';
+    std::cout<<bool(!10%3)<<'\n';
+    std::cout<<bool(10%2)<<'\n';
+    std::cout<<bool(!10%2)<<'\n';
+    std::cout<<(10%2==0)<<'\n';*/
+    std::cout<<largestDisvisiblePrime(number, startI)<<'\n';
+    std::cout<<"Result is two numbers ago +1. 6857 for 600851475143";
     return 0;
 }
