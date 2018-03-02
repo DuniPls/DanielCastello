@@ -19,7 +19,7 @@ Find the product abc.
 #include <math.h>
 
 void evenTest(){
-    int a;
+  int a;
   int b;
   int c;
   int j = 0;
@@ -32,7 +32,7 @@ void evenTest(){
 }
 
 void oddTest(){
-    int a;
+  int a;
   int b;
   int c;
   int j = 0;
@@ -44,10 +44,21 @@ void oddTest(){
   }
 }
 
+void fullTest() {
+  int a, b, c;
+  for (int i = 1; i < 500; i++) {
+    for (int j = i + 1; j < 500; j++) {
+      int k = (1000 - i - j);
+      if (i*i + j*j == k*k) {std::cout<<i<<" "<<j<<" "<<k<<": "<<(i*j*k)<<'\n';}
+    }
+  }
+}
+
 int main()
 {
-  evenTest();
-  oddTest();
-
+  //evenTest();
+  //oddTest();
+  fullTest();
+  std::cout << "No results." << '\n';
   return 0;
 }
