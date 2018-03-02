@@ -16,7 +16,7 @@ What is the largest prime factor of the number 600851475143 ?
 
 long long largestDisvisiblePrime(long long n, long long currentI){
   std::cout<<n<<'\n';
-  for (long long i = currentI; i < n; i++) {
+  for (long long i = currentI; i <= n; i++) {
     std::cout<<i;
     if (n%i==0) {
       std::cout<<'\t'<<i;
