@@ -1,5 +1,6 @@
 import sys
 import csv
+import numpy
 
 def open_and_filter_file(file_name, target_sample_rate):
     '''
@@ -38,16 +39,22 @@ def main():
     Main reduction driver. Read in data files, read in target rate,
     reduce data to target amount
     '''
-    if len(sys.argv) < 3:
-        print('USAGE: ActivityClassifier.py (path to data file)')
+    if len(sys.argv) < 2:
+        print('USAGE: ReduceSamplingRate.py (path to data file)')
         sys.exit(1)
     sample_set = sys.argv[1]
-    target_sampling_rate = sys.argv[2]
-
-    print('Target sample rate: ', target_sampling_rate)
-    print('Reading from: ', sample_set)
-
-    open_and_filter_file(sample_set, target_sampling_rate)
+    if len(sys.argv) < 3:
+        print('Reading from: ', sample_set)
+        # run 90, 80 ... 10 HZ
+        for i in numpy.arange(90.0, 0.0, -5.0):
+            target_sampling_rate = i
+            print('Target sample rate: ', target_sampling_rate)
+            open_and_filter_file(sample_set, str(target_sampling_rate))
+    else:
+        target_sampling_rate = sys.argv[2]
+        print('Target sample rate: ', target_sampling_rate)
+        print('Reading from: ', sample_set)
+        open_and_filter_file(sample_set, target_sampling_rate)
 
 if __name__ == '__main__':
     main()
