@@ -1,0 +1,17 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\HAR_PostProcessing",
+    "\\HAR_PostProcessing\\analysis",
+    "\\HAR_PostProcessing\\bash-scripts",
+    "\\HAR_PostProcessing\\bulk",
+    "\\HAR_PostProcessing\\data",
+    "\\HAR_PostProcessing\\monitor",
+    "\\HAR_PostProcessing\\monitor\\data",
+    "\\HAR_PostProcessing\\playground",
+    "\\Random Forest",
+    "\\Random Forest\\Datasets"
+  ],
+  "SelectedNode": "\\Random Forest\\trainer.py",
+  "PreviewInSolutionExplorer": false
+}
