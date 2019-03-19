@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\HUNT4-HAR-master\\LSTM",
+    "\\HUNT4-HAR-master\\LSTM\\Data_analysis",
+    "\\HUNT4-HAR-master\\LSTM\\Recurrent_ANN",
+    "\\HUNT4-HAR-master\\Random Forest",
+    "\\WorkingRandomForestAdapted",
+    "\\WorkingRandomForestAdapted\\Datasets"
+  ],
+  "SelectedNode": "\\WorkingRandomForestAdapted\\Datasets\\ReduceSampleRate.py",
+  "PreviewInSolutionExplorer": false
+}
