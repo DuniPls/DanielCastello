@@ -2,6 +2,9 @@ import sys
 import csv
 import numpy
 
+# filtering functions:
+
+
 def open_and_filter_file(file_name, target_sample_rate):
     '''
     Load sample data from the given file, create a new file with given sample rate.
@@ -30,7 +33,8 @@ def open_and_filter_file(file_name, target_sample_rate):
             if total_row_counter >= 1.0:
                 writer.writerow(str(elt) for elt in mrow)
                 total_row_counter = total_row_counter - 1.0
-
+    # Just here so the function can be colapsed properly
+    return 
 
 def open_and_filter_first_n_values_from_file(file_name, target_sample_rate, amount_of_samples):
     '''
@@ -64,8 +68,43 @@ def open_and_filter_first_n_values_from_file(file_name, target_sample_rate, amou
                 writer.writerow(str(elt) for elt in mrow)
                 total_row_counter = total_row_counter - 1.0
                 amount_of_rows_copied = amount_of_rows_copied + 1
-                if amount_of_rows_copied >= amount_of_samples: # once the desired amount of rows has been reached the execution stops (or if the file runs out)
+                if amount_of_rows_copied >= int(amount_of_samples): # once the desired amount of rows has been reached the execution stops (or if the file runs out)
                     break
+    # Just here so the function can be colapsed properly
+    return 
+
+# endof filtering functions
+# setup functions
+
+def limited_reduce_sample_rate_until_5(file_name, limit):
+    '''
+    Use this function to setup a targeted sample rate reduction from 95.0 - 5.0, each step is -5.0.
+    Takes a dataset of assumed 100Hz sample frequency.
+    Takes the amount of samples in the outputed file.
+    '''
+    
+    print('Reading from: ', file_name)
+    # run 95, 90 ... 5 HZ
+    for i in numpy.arange(95.0, 0.0, -5.0):
+        target_rate = i
+        print('Target sample rate: ', target_rate)
+        print('Amount of samples: ', limit)
+        open_and_filter_first_n_values_from_file(file_name, str(target_rate), limit)
+
+def limited_reduce_sample_rate_until_1(file_name, limit):
+    '''
+    Use this function to setup a targeted sample rate reduction from 4.0 - 1.0, each step is -1.0.
+    Takes a dataset of assumed 100Hz sample frequency.
+    Takes the amount of samples in the outputed file.
+    '''
+    
+    print('Reading from: ', file_name)
+    # run 4, 3 ... 1 HZ
+    for i in numpy.arange(4.0, 0.0, -1.0):
+        target_rate = i
+        print('Target sample rate: ', target_rate)
+        print('Amount of samples: ', limit)
+        open_and_filter_first_n_values_from_file(file_name, str(target_rate), limit)
 
 def reduce_sample_rate_until_5(file_name):
     '''
@@ -78,7 +117,8 @@ def reduce_sample_rate_until_5(file_name):
     for i in numpy.arange(95.0, 0.0, -5.0):
         target_rate = i
         print('Target sample rate: ', target_rate)
-        open_and_filter_file(file_name, str(target_rate))
+        shuffle_and_filter(file_name, str(target_rate))  # delete after test.
+        open_and_filter_file(file_name, str(target_rate))  #Commented out for a test
 
 def reduce_sample_rate_until_1(file_name):
     '''
@@ -104,6 +144,21 @@ def reduce_sample_rate_to_target(sample, target):
     print('Reading from: ', sample)
     open_and_filter_file(sample, target)
 
+def limited_reduce_sample_rate_to_target(sample, target, limit):
+    '''
+    Use this function to setup a targeted sample rate reduction from 100 to target frequency.
+    Takes a dataset of assumed 100Hz sample frequency.
+    Takes the desired frequency.
+    Takes the maximum amount of lines the output file will have.
+    '''
+
+    print('Reading from: ', sample)
+    print('Target sample rate: ', target)
+    print('Amount of samples: ', limit)
+    open_and_filter_first_n_values_from_file(sample, target, limit)
+
+ # endof setup functions
+
 def main():
     '''
     Main reduction driver. Read in data files, read in target rate,
@@ -119,8 +174,12 @@ def main():
     two arguments provided: (python Reduce.py dataset.csv reduce100)
         "reduce100" -> runs reduce_sample_rate_until_5(sys.argv[1])
         "reduce10" -> runs reduce_sample_rate_until_1(sys.argv[1])
+        "limitedreduce100" -> runs limited_reduce_sample_rate_until_5(sys.argv[1], 10000)
+        "limitedreduce10" -> runs limited_reduce_sample_rate_until_1(sys.argv[1], 1000)
     three arguments provided: (python Reduce.py dataset.csv reduce 100)
         "reduce" (python Reduce.py dataset.csv reduce 100):
+            "%d" _ runs reduce_sample_rate_to_target(sys.argv[1], sys.argv[4])
+        "limitedreduce" (python Reduce.py dataset.csv limitedreduce 100):
             "%d" _ runs reduce_sample_rate_to_target(sys.argv[1], sys.argv[4])
     '''
 
@@ -139,10 +198,22 @@ def main():
         if(mode_of_execution == "reduce10"):
             reduce_sample_rate_until_1(sample_set)
 
+        if(mode_of_execution == "limitedreduce100"):
+            limited_reduce_sample_rate_until_5(sample_set, 10000)
+
+        if(mode_of_execution == "limitedreduce10"):
+            limited_reduce_sample_rate_until_1(sample_set, 1000)
+
         if(mode_of_execution == "reduce"):
             if len(sys.argv) >= 4: # If more argumenta are provided e.g.(python Reduce.py dataset.csv reduce 30)
                 value_of_execution = sys.argv[3]
                 reduce_sample_rate_to_target(sample_set, value_of_execution)
+
+        if(mode_of_execution == "limitedreduce"):
+            if len(sys.argv) >= 5: # If more argumenta are provided e.g.(python Reduce.py dataset.csv limitedreduce 30 10000)
+                value_of_execution = sys.argv[3]
+                second_value_of_execution = sys.argv[4]
+                limited_reduce_sample_rate_to_target(sample_set, value_of_execution, second_value_of_execution)
 
 if __name__ == '__main__':
     main()
