@@ -132,6 +132,33 @@ def reduce_sample_rate_until_1(file_name):
         target_rate = i
         print('Target sample rate: ', target_rate)
         open_and_filter_file(file_name, str(target_rate))
+		
+def three_quarters_decay(file_name):
+    '''
+    Use this function to setup a targeted sample rate reduction from 100.0 - 0.0, each step is a reduction of 3/4 of the previous rate.
+    Takes a dataset of assumed 100Hz sample frequency.
+    '''
+    target_rate = 100.0
+    print('Reading from: ', file_name)
+    # run 100, 75 ... 0,01786 HZ
+    for i in numpy.arange(30.0, 0.0, -1.0):
+        target_rate = target_rate * 3/4
+        print('Target sample rate: ', target_rate)
+        open_and_filter_file(file_name, str(target_rate))
+				
+def three_quarters_decay_limited(file_name, limit):
+    '''
+    Use this function to setup a targeted sample rate reduction from 100.0 - 0.0, each step is a reduction of 3/4 of the previous rate.
+    Takes a dataset of assumed 100Hz sample frequency.
+	Takes the amount of samples in the outputed file.
+    '''
+    target_rate = 100.0
+    print('Reading from: ', file_name)
+    # run 100, 75 ... 0,01786 HZ
+    for i in numpy.arange(30.0, 0.0, -1.0):
+        target_rate = target_rate * 3/4
+        print('Target sample rate: ', target_rate)
+        open_and_filter_first_n_values_from_file(file_name, str(target_rate), limit)
 
 def reduce_sample_rate_to_target(sample, target):
     '''
@@ -176,11 +203,16 @@ def main():
         "reduce10" -> runs reduce_sample_rate_until_1(sys.argv[1])
         "limitedreduce100" -> runs limited_reduce_sample_rate_until_5(sys.argv[1], 10000)
         "limitedreduce10" -> runs limited_reduce_sample_rate_until_1(sys.argv[1], 1000)
+		"exponential" -> runs three_quarters_decay(sys.argv[1])
+        "limitedexponential1000" -> runs limited_reduce_sample_rate_until_5(sys.argv[1], 1000)
     three arguments provided: (python Reduce.py dataset.csv reduce 100)
         "reduce" (python Reduce.py dataset.csv reduce 100):
-            "%d" _ runs reduce_sample_rate_to_target(sys.argv[1], sys.argv[4])
+            "%d" -> runs reduce_sample_rate_to_target(sys.argv[1], sys.argv[4])
         "limitedreduce" (python Reduce.py dataset.csv limitedreduce 100):
-            "%d" _ runs reduce_sample_rate_to_target(sys.argv[1], sys.argv[4])
+            "%d" -> runs reduce_sample_rate_to_target(sys.argv[1], sys.argv[4])
+        "limitedexponential" (python Reduce.py dataset.csv limitedexponential 1000):
+            "%d" -> runs limited_reduce_sample_rate_until_5(sys.argv[1], sys.argv[4])
+
     '''
 
     if len(sys.argv) < 2: # If no dataset is provided e.g.(python Reduce.py)
