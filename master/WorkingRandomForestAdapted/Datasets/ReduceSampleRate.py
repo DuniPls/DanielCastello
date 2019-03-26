@@ -5,22 +5,22 @@ import numpy
 # filtering functions:
 
 
-def open_and_filter_file(file_name, target_sample_rate):
+def open_and_filter_file(input, target_sample_rate):
     '''
     Load sample data from the given file, create a new file with given sample rate.
     Takes a file to load from. 
     Takes a sample rate, meaning how many of the samples in the given file will be kept. 
     Assumes a base sample rate of 100.0 Hz.
 
-    Does not return anything, creates a file named "my_dataset_%sHZ.csv" % str(target_sample_rate)
+    Returns the name of the created file
     '''
 
-    target_file = "my_dataset_%sHZ.csv" % str(target_sample_rate.replace(".", ","))
+    target_file = input.replace(".csv", "_%sHZ.csv" % str(target_sample_rate.replace(".", ",")))
 
     row_counter = float(target_sample_rate) / 100.0
     total_row_counter = 0.0
 
-    with open(file_name, 'rt') as fin, open(target_file, 'w', newline='') as fout: # in python 2 open(target_file, 'wb'); in python 3 open(target_file, 'w', newline='')
+    with open(input, 'rt') as fin, open(target_file, 'w', newline='') as fout: # in python 2 open(target_file, 'wb'); in python 3 open(target_file, 'w', newline='')
         cfin = csv.reader(fin, delimiter=",")
         writer = csv.writer(fout, delimiter=",")
         first_row_copied = False
@@ -33,10 +33,10 @@ def open_and_filter_file(file_name, target_sample_rate):
             if total_row_counter >= 1.0:
                 writer.writerow(str(elt) for elt in mrow)
                 total_row_counter = total_row_counter - 1.0
-    # Just here so the function can be colapsed properly
-    return 
 
-def open_and_filter_first_n_values_from_file(file_name, target_sample_rate, amount_of_samples):
+    return target_file
+
+def open_and_filter_first_n_values_from_file(input, target_sample_rate, amount_of_samples):
     '''
     Load sample data from the given file, create a new file with given sample rate.
     Takes a file to load from. 
@@ -44,17 +44,17 @@ def open_and_filter_first_n_values_from_file(file_name, target_sample_rate, amou
     Takes a fixed amount of samples to place in the output file.
     Assumes a base sample rate of 100.0 Hz.
 
-    Does not return anything, creates a file named "my_dataset_%sHZ_%ssamples.csv" % str(target_sample_rate) % str(amount_of_samples)
+    Returns the name of the created file
     '''
 
-    target_file = "my_dataset_%sHZ_%ssamples.csv" % (str(target_sample_rate.replace(".", ",")), str(amount_of_samples))
+    target_file = input.replace(".csv", "_%sHZ_%ssamples.csv" % (str(target_sample_rate.replace(".", ","), str(amount_of_samples))))
 
     row_counter = float(target_sample_rate) / 100.0
     total_row_counter = 0.0
 
     amount_of_rows_copied = 0
 
-    with open(file_name, 'rt') as fin, open(target_file, 'w', newline='') as fout: # in python 2 open(target_file, 'wb'); in python 3 open(target_file, 'w', newline='')
+    with open(input, 'rt') as fin, open(target_file, 'w', newline='') as fout: # in python 2 open(target_file, 'wb'); in python 3 open(target_file, 'w', newline='')
         cfin = csv.reader(fin, delimiter=",")
         writer = csv.writer(fout, delimiter=",")
         first_row_copied = False
@@ -70,8 +70,8 @@ def open_and_filter_first_n_values_from_file(file_name, target_sample_rate, amou
                 amount_of_rows_copied = amount_of_rows_copied + 1
                 if amount_of_rows_copied >= int(amount_of_samples): # once the desired amount of rows has been reached the execution stops (or if the file runs out)
                     break
-    # Just here so the function can be colapsed properly
-    return 
+
+    return target_file
 
 # endof filtering functions
 # setup functions

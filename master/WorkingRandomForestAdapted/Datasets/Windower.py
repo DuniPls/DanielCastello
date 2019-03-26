@@ -24,8 +24,7 @@ def make_windows_discard(input, window_size):
     Creates a file named the same way as the given file with _windowed added at the end.
     Returns the name of the created file.
     '''
-    
-    target_file = "%s_windowed_discard_%s.csv" % (input, str(window_size))
+    target_file = input.replace(".csv", "_windowed_discard_%s.csv" % str(window_size))
 
     current_window_counter = int(window_size)
     current_window = []
@@ -80,7 +79,7 @@ def make_windows_no_discard(input, window_size):
     Returns the name of the created file.
     '''
     
-    target_file = "%s_windowed_no_discard_%s.csv" % (input, str(window_size))
+    target_file = input.replace(".csv", "_windowed_no_discard_%s.csv" % str(window_size))
 
     current_window_counter = int(window_size)
     current_window = []
@@ -143,7 +142,7 @@ def make_average_windows_discard(input, window_size):
     Returns the name of the created file.
     '''
     
-    target_file = "%s_windowed_average_%s_discard.csv" % (input, str(window_size))
+    target_file = input.replace(".csv", "_windowed_average_%s.csv" % str(window_size))
 
     current_window_counter = int(window_size)
     current_window = []
@@ -218,13 +217,13 @@ def main():
     sample_set = sys.argv[1]
     if len(sys.argv) >= 4: # If ony one argument is provided e.g.(python Reduce.py dataset.csv reduce100)
         mode_of_execution = sys.argv[2]
-        input = sys.argv[3]
+        in_value = sys.argv[3]
         if(mode_of_execution == "discardwindow"):
-            make_windows_discard(sample_set, input)
+            make_windows_discard(sample_set, in_value)
         if(mode_of_execution == "window"):
-            make_windows_no_discard(sample_set, input)
+            make_windows_no_discard(sample_set, in_value)
         if(mode_of_execution == "average"):
-            make_average_windows_discard(sample_set, input)
+            make_average_windows_discard(sample_set, in_value)
 
 if __name__ == '__main__':
     main()

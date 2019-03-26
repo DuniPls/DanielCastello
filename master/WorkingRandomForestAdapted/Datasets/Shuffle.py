@@ -4,7 +4,7 @@ import sys
 import csv
 
 
-def shuffle_file(file_name):
+def shuffle_file(input):
     '''
     Load sample data from the given file, shuffle rows, create a new file with shuffled information.
     Takes a file to load from. 
@@ -13,9 +13,9 @@ def shuffle_file(file_name):
     Returns the name of the created file.
     '''
 
-    target_file = "%s_shuffled.csv" % str(file_name)
+    target_file = input.replace(".csv", "_shuffled.csv")
 
-    cfin = pandas.read_csv(file_name, index_col = 0)
+    cfin = pandas.read_csv(input, index_col = 0)
     output = cfin.sample(frac = 1)
     #output = cfin.reindex(numpy.random.permutation(cfin.index))
     output.to_csv(target_file, sep=',')

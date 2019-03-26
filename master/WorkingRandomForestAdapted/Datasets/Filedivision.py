@@ -2,6 +2,37 @@ import sys
 import csv
 import Shuffle 
 
+def take_first_n_lines(input, number_of_lines):
+	'''
+	Load sample data from the given file, outputs first int(number_of_lines)
+	Creates output in the format: "%s_first_%s.csv" % input, str(number_of_lines).
+
+	Takes input: input file to divide.
+	Takes number_of_lines: amount of lines in output file, excluding header.
+
+	Returns file name.
+	'''
+	target_file = input.replace(".csv", "_%slines.csv" % str(number_of_lines))
+
+	first_row = True
+	number_of_lines = int(number_of_lines)
+
+	with open(input, 'rt') as fin, open(target_file, 'w', newline='') as fout:
+		cfin = csv.reader(fin)
+		cfout = csv.writer(fout, delimiter=",")
+		for mrow in cfin:
+
+			if first_row: # First line is a header. Copy it but do not count
+				cfout.writerow(str(elt) for elt in mrow)
+				first_row = False
+				continue
+
+			number_of_lines = number_of_lines - 1
+			cfout.writerow(str(elt) for elt in mrow)
+			if(number_of_lines <= 0): # if we copied as many lines as the input specifies we will close the current file
+				break
+	return target_file
+
 def divide_file(input, output_size):
 	'''
 	Load sample data from the given file, divide file, 
@@ -9,7 +40,7 @@ def divide_file(input, output_size):
 	Will put header in all files.
 
 	Takes input: input file to divide.
-	Takes output_size: amount of lines in output files, ixcluding header.
+	Takes output_size: amount of lines in output files, excluding header.
 
 	Returns list of file names.
 	'''
@@ -43,7 +74,7 @@ def divide_file(input, output_size):
 			if(output_count >= int(output_size)): # if we copied as many lines as the input specifies we will close the current file
 				file_is_open = False
 				current_output.close()
-	print(divided_files_list)
+	return divided_files_list
 
 
 
@@ -59,8 +90,11 @@ def main():
 	no argument provided -> error (python Reduce.py)
 	one argument provided -> error (python Reduce.py dataset.csv)
 	two arguments provided: (python Reduce.py dataset.csv reduce100)
-		"shuffle" -> runs shuffle_file(sys.argv[1])
 	three arguments provided: (python Reduce.py dataset.csv reduce 100)
+		"divide":
+		    "%d" -> runs divide_file(sys.argv[1], sys.argv[3])
+		"first":
+		    "%d" -> runs take_first_n_lines(sys.argv[1], sys.argv[3])
 	'''
 	if len(sys.argv) < 2: # If no dataset is provided e.g.(python Reduce.py)
 		print('USAGE: FileDivision.py (path to data file)')
@@ -69,10 +103,13 @@ def main():
 		print('USAGE: FileDivision.py (mode of execution)')
 		sys.exit(1)
 	sample_set = sys.argv[1]
-	if len(sys.argv) >= 3: # If ony one argument is provided e.g.(python Reduce.py dataset.csv reduce100)
+	if len(sys.argv) >= 4: # If ony one argument is provided e.g.(python Reduce.py dataset.csv reduce100)
 		mode_of_execution = sys.argv[2]
+		in_value = sys.argv[3]
 		if(mode_of_execution == "divide"):
-			divide_file(sample_set, 100000)
+			divide_file(sample_set, in_value)
+		if(mode_of_execution == "first"):
+			take_first_n_lines(sample_set, in_value)
 
 if __name__ == '__main__':
 	main()
