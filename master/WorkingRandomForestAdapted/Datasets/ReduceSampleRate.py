@@ -117,8 +117,7 @@ def reduce_sample_rate_until_5(file_name):
     for i in numpy.arange(95.0, 0.0, -5.0):
         target_rate = i
         print('Target sample rate: ', target_rate)
-        shuffle_and_filter(file_name, str(target_rate))  # delete after test.
-        open_and_filter_file(file_name, str(target_rate))  #Commented out for a test
+        open_and_filter_file(file_name, str(target_rate))
 
 def reduce_sample_rate_until_1(file_name):
     '''
@@ -132,7 +131,7 @@ def reduce_sample_rate_until_1(file_name):
         target_rate = i
         print('Target sample rate: ', target_rate)
         open_and_filter_file(file_name, str(target_rate))
-		
+
 def three_quarters_decay(file_name):
     '''
     Use this function to setup a targeted sample rate reduction from 100.0 - 0.0, each step is a reduction of 3/4 of the previous rate.
@@ -145,7 +144,7 @@ def three_quarters_decay(file_name):
         target_rate = target_rate * 3/4
         print('Target sample rate: ', target_rate)
         open_and_filter_file(file_name, str(target_rate))
-				
+
 def three_quarters_decay_limited(file_name, limit):
     '''
     Use this function to setup a targeted sample rate reduction from 100.0 - 0.0, each step is a reduction of 3/4 of the previous rate.

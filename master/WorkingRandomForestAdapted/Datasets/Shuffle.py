@@ -9,7 +9,8 @@ def shuffle_file(file_name):
     Load sample data from the given file, shuffle rows, create a new file with shuffled information.
     Takes a file to load from. 
 
-    Does not return anything, creates a file named the same way as the given file with _shuffled added at the end.
+    Creates a file named the same way as the given file with _shuffled added at the end.
+    Returns the name of the created file.
     '''
 
     target_file = "%s_shuffled.csv" % str(file_name)
@@ -17,7 +18,8 @@ def shuffle_file(file_name):
     cfin = pandas.read_csv(file_name, index_col = 0)
     output = cfin.sample(frac = 1)
     #output = cfin.reindex(numpy.random.permutation(cfin.index))
-    output.to_csv("%s_shuffled.csv" % str(file_name), sep=',')
+    output.to_csv(target_file, sep=',')
+    return target_file
 
 
 def main():
