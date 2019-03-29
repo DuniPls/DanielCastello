@@ -65,7 +65,67 @@ def make_windows_discard(input, window_size):
                 current_window_counter = int(window_size)
 
     return target_file
+	
+def make_windows_transition(input, window_size):
+    '''
+    Load sample data from the given file, take %d (window_size) rows, create a new file with those rows in one single line.
+    Takes a file to load from. 
+    Takes the amount of samples in each window.
 
+    If the labels are different a new transition label will be created. (transition from "stand" to "walk" will be labeled as "transition")
+
+    Creates a file named the same way as the given file with _windowed_transition added at the end.
+    Returns the name of the created file.
+    '''
+    
+    target_file = input.replace(".csv", "_windowed_transition_%s.csv" % str(window_size))
+
+    current_window_counter = int(window_size)
+    current_window = []
+    current_window_label = "none"
+    label_to_add = ""
+    current_line_label = ""
+
+    with open(input, 'rt') as fin, open(target_file, 'w', newline='') as fout: # in python 2 open(target_file, 'wb'); in python 3 open(target_file, 'w', newline='')
+        cfin = csv.reader(fin, delimiter=",")
+        writer = csv.writer(fout, delimiter=",")
+        first_row_copied = False
+        for mrow in cfin:
+            if not first_row_copied: # We will copy the first line, since it includes the headers
+                header = []
+                for i in range(DATA_START_INDEX):
+                    header.append(mrow[i])
+                for i in range(int(window_size)):
+                    for j in range(DATA_START_INDEX, DATA_END_INDEX + 1):
+                        header.append(mrow[j])
+                header.append(mrow[LABEL_INDEX])
+                writer.writerow(str(elt) for elt in header)
+                first_row_copied = True
+                continue
+
+            if current_window_counter >= int(window_size): # on a new line 
+                current_window = []
+                current_line_label = mrow[LABEL_INDEX]
+
+            current_window_label = mrow[LABEL_INDEX]
+            if((label_to_add + current_window_label) == current_line_label): #if the label from the first row is the same as the current we continue
+                for i in range(DATA_START_INDEX, DATA_END_INDEX + 1):
+                    current_window.append(mrow[i])
+            else: #if the label from the first row is different as the current window, we add both labels as a new label
+                label_to_add = current_line_label
+                current_line_label = label_to_add + current_window_label
+                for i in range(DATA_START_INDEX, DATA_END_INDEX + 1):
+                    current_window.append(mrow[i])
+
+            current_window_counter = current_window_counter - 1
+            if current_window_counter <= 0: # if this was the last line of the window
+                current_window.append(current_line_label)
+                writer.writerow(str(elt) for elt in current_window)
+                current_window_counter = int(window_size)
+                label_to_add = ""
+
+
+    return target_file
     
 def make_windows_no_discard(input, window_size):
     '''
@@ -75,7 +135,7 @@ def make_windows_no_discard(input, window_size):
 
     If the labels are different a new label will be created. (transition from "stand" to "walk" will be labeled as "standwalk")
 
-    Creates a file named the same way as the given file with _windowed added at the end.
+    Creates a file named the same way as the given file with _windowed_no_discard added at the end.
     Returns the name of the created file.
     '''
     
