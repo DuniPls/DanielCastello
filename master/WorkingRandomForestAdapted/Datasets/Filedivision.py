@@ -76,7 +76,71 @@ def divide_file(input, output_size):
 				current_output.close()
 	return divided_files_list
 
+def count_labels(input):
+	'''
+	Load sample data from the given file, locate labels, 
+	Count each ocurrence of each label.
 
+	Takes input: input file to divide.
+	Assumes label is in position 8 (LABEL_INDEX = 8).
+
+	Returns dictionary of label:amount.
+	'''
+	LABEL_INDEX = 8
+	labels = dict()
+
+	first_row = True
+
+	with open(input, 'rt') as fin:
+		cfin = csv.reader(fin)
+		for mrow in cfin:
+
+			if first_row: # First line is a header. Copy it but do not count
+				first_row = False
+				continue
+
+			if str(mrow[LABEL_INDEX]) in labels:
+				labels[str(mrow[LABEL_INDEX])] = labels[str(mrow[LABEL_INDEX])] + 1
+			else:
+				labels[str(mrow[LABEL_INDEX])] = 1
+	for l in labels:
+		print(l, labels[l])
+	
+	return labels
+
+def remove_label(input, label_to_remove, target_file):
+	'''
+	Load sample data from the given file, copy contents to another file except the label to remove.
+
+	Takes input: input file to divide.
+	Takes label_to_remove: label to locate and remove from the file.
+	Assumes label is in position 8 (LABEL_INDEX = 8).
+
+	Returns dictionary of label:amount.
+	'''
+	LABEL_INDEX = 8
+	labels = dict()
+
+	first_row = True
+
+	with open(input, 'rt') as fin, open(target_file, 'w', newline='') as fout:
+		cfin = csv.reader(fin)
+		cfout = csv.writer(fout, delimiter=",")
+		for mrow in cfin:
+
+			if first_row: # First line is a header. Copy it but do not count
+				writer.writerow(str(elt) for elt in mrow)
+				first_row = False
+				continue
+
+			if str(mrow[LABEL_INDEX]) == str(label_to_remove):
+				continue
+			else:
+				writer.writerow(str(elt) for elt in mrow)
+	for l in labels:
+		print(l, labels[l])
+	
+	return labels
 
 def main():
 	'''
@@ -90,6 +154,7 @@ def main():
 	no argument provided -> error (python Reduce.py)
 	one argument provided -> error (python Reduce.py dataset.csv)
 	two arguments provided: (python Reduce.py dataset.csv reduce100)
+		"countlables" -> runs count_labels(sys.argv[1])
 	three arguments provided: (python Reduce.py dataset.csv reduce 100)
 		"divide":
 		    "%d" -> runs divide_file(sys.argv[1], sys.argv[3])
@@ -103,6 +168,10 @@ def main():
 		print('USAGE: FileDivision.py (mode of execution)')
 		sys.exit(1)
 	sample_set = sys.argv[1]
+	if len(sys.argv) == 3:
+		mode_of_execution = sys.argv[2]
+		if(mode_of_execution == "countlables"):
+			count_labels(sample_set)
 	if len(sys.argv) >= 4: # If ony one argument is provided e.g.(python Reduce.py dataset.csv reduce100)
 		mode_of_execution = sys.argv[2]
 		in_value = sys.argv[3]

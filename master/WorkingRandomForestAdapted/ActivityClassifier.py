@@ -123,7 +123,7 @@ def main():
     # Default of 9 trees
     #random_forest = RandomForest(training_samples, 9)
     random_forest = RandomForest(training_samples, 36)
-    print(random_forest)
+    # print(random_forest) # Uncomment to see the random forest visualization.
 
     confusion_matrix = ConfusionMatrix(id_to_cat.values())
 
