@@ -1,0 +1,23 @@
+                                                               predicted                                                               
+    actual         b'standing'     b'walking'   b'shuffling'     b'bending'     b'picking'  b'transition'     b'sitting'
+    b'standing'            959             36             61              9              0              2              0
+     b'walking'             19            114             49              0              0              5              1
+   b'shuffling'              4              8             14              0              0              1              0
+     b'bending'              0              0              0             16              2              2              0
+     b'picking'              0              0              0              1             11              0              0
+  b'transition'              0              0              0              0              0             11              1
+     b'sitting'              1              0              0              0              0              1           1171
+Category: b'standing' Precision: 0.9755849440488301 Recall: 0.8987816307403936 Balanced F Statistic: 0.9356097560975609
+Overall: Precision: 0.6814057984139276  Recall: 0.8079016330682325 Balanced F Statistic: 0.7046657268623563
+Category: b'walking' Precision: 0.7215189873417721 Recall: 0.6063829787234043 Balanced F Statistic: 0.6589595375722543
+Overall: Precision: 0.6814057984139276  Recall: 0.8079016330682325 Balanced F Statistic: 0.7046657268623563
+Category: b'shuffling' Precision: 0.11290322580645161 Recall: 0.5185185185185185 Balanced F Statistic: 0.1170848267622461
+Overall: Precision: 0.6814057984139276  Recall: 0.8079016330682325 Balanced F Statistic: 0.7046657268623563
+Category: b'bending' Precision: 0.6153846153846154 Recall: 0.8 Balanced F Statistic: 0.6956521739130435
+Overall: Precision: 0.6814057984139276  Recall: 0.8079016330682325 Balanced F Statistic: 0.7046657268623563
+Category: b'picking' Precision: 0.8461538461538461 Recall: 0.9166666666666666 Balanced F Statistic: 0.8799999999999999
+Overall: Precision: 0.6814057984139276  Recall: 0.8079016330682325 Balanced F Statistic: 0.7046657268623563
+Category: b'transition' Precision: 0.5 Recall: 0.9166666666666666 Balanced F Statistic: 0.6470588235294118
+Overall: Precision: 0.6814057984139276  Recall: 0.8079016330682325 Balanced F Statistic: 0.7046657268623563
+Category: b'sitting' Precision: 0.9982949701619779 Recall: 0.9982949701619779 Balanced F Statistic: 0.9982949701619779
+Overall: Precision: 0.6814057984139276  Recall: 0.8079016330682325 Balanced F Statistic: 0.7046657268623563

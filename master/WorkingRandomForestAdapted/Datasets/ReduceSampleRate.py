@@ -47,7 +47,7 @@ def open_and_filter_first_n_values_from_file(input, target_sample_rate, amount_o
     Returns the name of the created file
     '''
 
-    target_file = input.replace(".csv", "_%sHZ_%ssamples.csv" % (str(target_sample_rate.replace(".", ","), str(amount_of_samples))))
+    target_file = input.replace(".csv", "_%sHZ_%ssamples.csv" % (str(target_sample_rate).replace(".", ","), str(amount_of_samples)))
 
     row_counter = float(target_sample_rate) / 100.0
     total_row_counter = 0.0
@@ -183,6 +183,38 @@ def limited_reduce_sample_rate_to_target(sample, target, limit):
     print('Amount of samples: ', limit)
     open_and_filter_first_n_values_from_file(sample, target, limit)
 
+def limited_windows_experiment(set):
+    '''
+    Use this function to setup a window experiment, compare different windowed implementations to see which is more efficient.
+    Takes a dataset, will add "_windowed_discard_%d" %d will be all the different window sizes:
+       Window sizes: 2, 3, ... 10; 12, 14 .. 20, 25, 30, 35, 40; 50, 60 ... 100.
+
+    Prints all confusion matrixes
+    '''
+    sample_rate = 100
+    sample_amount = 100000
+    for i in range(2, 10):
+        current_dataset = set.replace("2.csv", "%s.csv" % str(i))
+        print('Reading from: ', current_dataset)
+        print('# of windows: ', i)
+        open_and_filter_first_n_values_from_file(current_dataset, sample_rate, sample_amount)
+
+    for i in range(10, 20, 2):
+        current_dataset = set.replace("2.csv", "%s.csv" % str(i))
+        print('Reading from: ', current_dataset)
+        print('# of windows: ', i)
+        open_and_filter_first_n_values_from_file(current_dataset, sample_rate, sample_amount) 
+    for i in range(20, 40, 5):
+        current_dataset = set.replace("2.csv", "%s.csv" % str(i))
+        print('Reading from: ', current_dataset)
+        print('# of windows: ', i)
+        open_and_filter_first_n_values_from_file(current_dataset, sample_rate, sample_amount)   
+    for i in range(40, 101, 10):
+        current_dataset = set.replace("2.csv", "%s.csv" % str(i))
+        print('Reading from: ', current_dataset)
+        print('# of windows: ', i)
+        open_and_filter_first_n_values_from_file(current_dataset, sample_rate, sample_amount)
+
  # endof setup functions
 
 def main():
@@ -204,6 +236,7 @@ def main():
         "limitedreduce10" -> runs limited_reduce_sample_rate_until_1(sys.argv[1], 1000)
 		"exponential" -> runs three_quarters_decay(sys.argv[1])
         "limitedexponential1000" -> runs limited_reduce_sample_rate_until_5(sys.argv[1], 1000)
+        "limitedwindows" -> runs limited_windows_experiment(sys.argv[1])
     three arguments provided: (python Reduce.py dataset.csv reduce 100)
         "reduce" (python Reduce.py dataset.csv reduce 100):
             "%d" -> runs reduce_sample_rate_to_target(sys.argv[1], sys.argv[4])
@@ -234,6 +267,9 @@ def main():
 
         if(mode_of_execution == "limitedreduce10"):
             limited_reduce_sample_rate_until_1(sample_set, 1000)
+
+        if(mode_of_execution == "limitedwindows"):
+            limited_windows_experiment(sample_set)
 
         if(mode_of_execution == "reduce"):
             if len(sys.argv) >= 4: # If more argumenta are provided e.g.(python Reduce.py dataset.csv reduce 30)

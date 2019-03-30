@@ -108,7 +108,7 @@ def count_labels(input):
 	
 	return labels
 
-def remove_label(input, label_to_remove, target_file):
+def remove_label(input, label_to_remove):
 	'''
 	Load sample data from the given file, copy contents to another file except the label to remove.
 
@@ -116,12 +116,15 @@ def remove_label(input, label_to_remove, target_file):
 	Takes label_to_remove: label to locate and remove from the file.
 	Assumes label is in position 8 (LABEL_INDEX = 8).
 
-	Returns dictionary of label:amount.
+	Returns file name.
 	'''
 	LABEL_INDEX = 8
-	labels = dict()
 
 	first_row = True
+	label_to_remove = "b\'" + label_to_remove + "\'"
+	print(label_to_remove)
+
+	target_file = input.replace(".csv", "_removed.csv")
 
 	with open(input, 'rt') as fin, open(target_file, 'w', newline='') as fout:
 		cfin = csv.reader(fin)
@@ -129,18 +132,53 @@ def remove_label(input, label_to_remove, target_file):
 		for mrow in cfin:
 
 			if first_row: # First line is a header. Copy it but do not count
-				writer.writerow(str(elt) for elt in mrow)
+				cfout.writerow(str(elt) for elt in mrow)
 				first_row = False
 				continue
 
 			if str(mrow[LABEL_INDEX]) == str(label_to_remove):
 				continue
 			else:
-				writer.writerow(str(elt) for elt in mrow)
-	for l in labels:
-		print(l, labels[l])
+				cfout.writerow(str(elt) for elt in mrow)
 	
-	return labels
+	return target_file
+
+def substitute_label(input, label_to_remove, label_to_impose):
+    '''
+    Load sample data from the given file, copy contents to another file, the label to remove will be substituted for the imposed label.
+    
+    Takes input: input file to divide.
+    Takes label_to_remove: label to locate and remove from the file.
+    Takes label_to_impose: label to locate and substitute from the file, in the removed label's position.
+    Assumes label is in position 8 (LABEL_INDEX = 8).
+    
+    Returns file name.
+    '''
+    LABEL_INDEX = 8
+
+    first_row = True
+    label_to_remove = "b\'" + label_to_remove + "\'"
+    label_to_impose = "b\'" + label_to_impose + "\'"
+    target_file = input.replace(".csv", "_sustituted.csv")
+
+    with open(input, 'rt') as fin, open(target_file, 'w', newline='') as fout:
+        cfin = csv.reader(fin)
+        cfout = csv.writer(fout, delimiter=",")
+        for mrow in cfin:
+
+            if first_row: # First line is a header. Copy it but do not count
+                cfout.writerow(str(elt) for elt in mrow)
+                first_row = False
+                continue
+
+            sample = []
+            for elt in mrow:
+                if str(elt) == str(label_to_remove):
+                    sample.append(str(label_to_impose))
+                else:
+                    sample.append(str(elt))
+            cfout.writerow(str(s) for s in sample)
+    return target_file
 
 def main():
 	'''
@@ -154,12 +192,17 @@ def main():
 	no argument provided -> error (python Reduce.py)
 	one argument provided -> error (python Reduce.py dataset.csv)
 	two arguments provided: (python Reduce.py dataset.csv reduce100)
-		"countlables" -> runs count_labels(sys.argv[1])
+		"countlabels" -> runs count_labels(sys.argv[1])
 	three arguments provided: (python Reduce.py dataset.csv reduce 100)
 		"divide":
 		    "%d" -> runs divide_file(sys.argv[1], sys.argv[3])
 		"first":
 		    "%d" -> runs take_first_n_lines(sys.argv[1], sys.argv[3])
+        "remove":
+		    "%s" -> runs remove_label(sys.argv[1], sys.argv[3], )
+    four arguments provided: (python Reduce.py dataset.csv substitute sitting laying)
+		"substitute":
+		    "%d" -> runs substitute_label(sys.argv[1], sys.argv[3], sys.argv[4])
 	'''
 	if len(sys.argv) < 2: # If no dataset is provided e.g.(python Reduce.py)
 		print('USAGE: FileDivision.py (path to data file)')
@@ -170,15 +213,24 @@ def main():
 	sample_set = sys.argv[1]
 	if len(sys.argv) == 3:
 		mode_of_execution = sys.argv[2]
-		if(mode_of_execution == "countlables"):
+		if(mode_of_execution == "countlabels"):
 			count_labels(sample_set)
-	if len(sys.argv) >= 4: # If ony one argument is provided e.g.(python Reduce.py dataset.csv reduce100)
+	if len(sys.argv) == 4:
 		mode_of_execution = sys.argv[2]
 		in_value = sys.argv[3]
 		if(mode_of_execution == "divide"):
 			divide_file(sample_set, in_value)
 		if(mode_of_execution == "first"):
 			take_first_n_lines(sample_set, in_value)
+		if(mode_of_execution == "remove"):
+			remove_label(sample_set, in_value)
+
+	if len(sys.argv) == 5:
+		mode_of_execution = sys.argv[2]
+		in_value = sys.argv[3]
+		in_label = sys.argv[4]
+		if(mode_of_execution == "substitute"):
+			substitute_label(sample_set, in_value, in_label)
 
 if __name__ == '__main__':
 	main()

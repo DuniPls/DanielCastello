@@ -50,6 +50,8 @@ def make_windows_discard(input, window_size):
             if current_window_counter >= int(window_size): # on a new line 
                 current_window = []
                 current_window_label = mrow[LABEL_INDEX]
+                for t in range(DATA_START_INDEX):
+                    current_window.append(mrow[t])
 
             if(current_window_label == mrow[LABEL_INDEX]): #if the label from the first row is the same as the current we continue (this is a valid window)
                 for i in range(DATA_START_INDEX, DATA_END_INDEX + 1):
@@ -65,7 +67,7 @@ def make_windows_discard(input, window_size):
                 current_window_counter = int(window_size)
 
     return target_file
-	
+
 def make_windows_transition(input, window_size):
     '''
     Load sample data from the given file, take %d (window_size) rows, create a new file with those rows in one single line.
@@ -188,8 +190,6 @@ def make_windows_no_discard(input, window_size):
 
     return target_file
 
-
-
 def make_average_windows_discard(input, window_size):
     '''
     Load sample data from the given file, take %d (window_size) rows, create a new file with those rows in one single line.
@@ -248,6 +248,28 @@ def make_average_windows_discard(input, window_size):
     return target_file
 
 
+def make_windows_experiment(set):
+    '''
+    Use this function to setup a windower.
+    Takes a dataset.
+
+    Makes a windowed dataset from 2, 3, ... 10; 12, 14 .. 20, 25, 30, 35, 40; 50, 60 ... 100.
+    '''
+
+    print('Reading from: ', set)
+    for i in range(2, 10):
+        print('# of windows: ', i)
+        print('Output file: ', make_windows_discard(set, i))
+    for i in range(10, 20, 2):
+        print('# of windows: ', i)
+        print('Output file: ', make_windows_discard(set, i))
+    for i in range(20, 40, 5):
+        print('# of windows: ', i)
+        print('Output file: ', make_windows_discard(set, i))
+    for i in range(40, 101, 10):
+        print('# of windows: ', i)
+        print('Output file: ', make_windows_discard(set, i))
+
 def main():
     '''
     Main windower driver. Read in data files, join data and labels in windows.
@@ -260,6 +282,7 @@ def main():
     no argument provided -> error (python Shuffle.py)
     one argument provided -> error (python Shuffle.py dataset.csv)
     two arguments provided: (python Shuffle.py dataset.csv reduce100)
+        "windows" -> runs make_windows_experiment(sys.argv[1])
     three arguments provided: (python Shuffle.py dataset.csv reduce 100)
         "discardwindow":
             "%d" -> make_windows_discard(sys.argv[1], sys.argv[3])
@@ -275,6 +298,10 @@ def main():
         print('USAGE: Windower.py (mode of execution)')
         sys.exit(1)
     sample_set = sys.argv[1]
+    if len(sys.argv) == 3:
+        mode_of_execution = sys.argv[2]
+        if(mode_of_execution == "windows"):
+            make_windows_experiment(sample_set)
     if len(sys.argv) >= 4: # If ony one argument is provided e.g.(python Reduce.py dataset.csv reduce100)
         mode_of_execution = sys.argv[2]
         in_value = sys.argv[3]

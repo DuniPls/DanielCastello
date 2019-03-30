@@ -17,7 +17,6 @@ def shuffle_file(input):
 
     cfin = pandas.read_csv(input, index_col = 0)
     output = cfin.sample(frac = 1)
-    #output = cfin.reindex(numpy.random.permutation(cfin.index))
     output.to_csv(target_file, sep=',')
     return target_file
 

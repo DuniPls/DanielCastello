@@ -26,6 +26,7 @@ classification efficiency statistics
 import sys
 import csv
 import random
+import datetime
 from collections import defaultdict
 import numpy as np
 from RandomForest import RandomForest
@@ -51,12 +52,15 @@ def load_sample_data(file_name):
         ''' When using my_dataset change to second line '''
         #cfin = csv.reader(fin, delimiter=';')
         cfin = csv.reader(fin)
-        # First line is a header. Burn it
-        next(cfin)
+        LABEL_INDEX = -1
         for mrow in cfin:
-            ''' When using my_dataset change to second line '''
-            #category = mrow[18]
-            category = mrow[8]
+            if LABEL_INDEX == -1: # Once we know our label index we are over the first line. Label will only equal -1 during the firt execution
+                for l in range(len(mrow)): # We look for the column with "label" in it, that will be the index of our labels from now on.
+                    if str(mrow[l]) == "label":
+                        LABEL_INDEX = l
+                        break # I don't think the break does anything, since label will always be tha last column.
+                continue
+            category = mrow[LABEL_INDEX]
             record_id = -1.0 # Invalid value
             if category in cat_to_id.keys():
                 record_id = cat_to_id[category]
@@ -69,9 +73,7 @@ def load_sample_data(file_name):
             # individual measured. Since this data has perfect corrolation,
             # taking multiple is useless for classification. Take the last
             # one, Body Mass Index.
-            ''' When using my_dataset change to second line '''
-            #samples = [float(i.replace(",", ".")) for i in mrow[5:18]]
-            samples = [float(i) for i in mrow[2:7]]
+            samples = [float(i) for i in mrow[2:(LABEL_INDEX-1)]]
             samples.append(record_id) # Correct category becomes last column
             sample_set.append(samples)
     return (np.array(sample_set), id_to_cat)
@@ -100,6 +102,61 @@ def filter_sample_set(sample_set):
             sublist_size = sublist_size - 1
     return np.array(output_samples)
 
+def run_train(train_set, number_of_trees):
+    RF = RandomForest(train_set, number_of_trees)
+
+    return RF
+
+def run_test(ids, test_set, forest):
+    CM = ConfusionMatrix(ids.values())
+    for sample in test_set:
+            classified_category = forest.classify_activity(sample)
+            CM.add_result(int(sample[-1]), classified_category)
+
+    return CM
+
+def run_everything(set_name):
+    (sample_set, id_to_cat) = load_sample_data(set_name) # load data
+    np.random.shuffle(sample_set) # shuffle data
+    test_sample_count = int(sample_set.shape[0] / 5) # find how many samples equate to 20% of samples
+    test_samples = sample_set[:test_sample_count] # establish train set as first 80% of samples
+    training_samples = sample_set[test_sample_count:]# establish test set as las 20% of samples
+    sys.setrecursionlimit(5000) # Set the recursion limit very high so our computer doesn't think the random forest is an infinite loop
+    forest = run_train(training_samples, 7) # train the random forest with 7 trees
+    matrix = run_test(id_to_cat, test_samples, forest) # Create the confusion matrix from the random forest using the test set
+    print(matrix) # print the matrix
+    matrix.report_stats() # print the confusion matrix precision/recall
+
+def make_windows_experiment(set):
+    '''
+    Use this function to setup a window experiment, compare different windowed implementations to see which is more efficient.
+    Takes a dataset, will add "_windowed_discard_%d" %d will be all the different window sizes:
+       Window sizes: 2, 3, ... 10; 12, 14 .. 20, 25, 30, 35, 40; 50, 60 ... 100.
+
+    Prints all confusion matrixes
+    '''
+    for i in range(2, 10):
+        current_dataset = set.replace(".csv", "_windowed_discard_%s.csv" % str(i))
+        print('Reading from: ', current_dataset)
+        print('# of windows: ', i)
+        run_everything(current_dataset)
+
+    for i in range(10, 20, 2):
+        current_dataset = set.replace(".csv", "_windowed_discard_%s.csv" % str(i))
+        print('Reading from: ', current_dataset)
+        print('# of windows: ', i)
+        run_everything(current_dataset)    
+    for i in range(20, 40, 5):
+        current_dataset = set.replace(".csv", "_windowed_discard_%s.csv" % str(i))
+        print('Reading from: ', current_dataset)
+        print('# of windows: ', i)
+        run_everything(current_dataset)    
+    for i in range(40, 101, 10):
+        current_dataset = set.replace(".csv", "_windowed_discard_%s.csv" % str(i))
+        print('Reading from: ', current_dataset)
+        print('# of windows: ', i)
+        run_everything(current_dataset)
+
 def main():
     '''
     Main classification driver. Read in data files, classify the sensor data
@@ -108,10 +165,12 @@ def main():
     if len(sys.argv) < 2:
         print('USAGE: ActivityClassifier.py (path to data file)')
         sys.exit(1)
+
+    '''
     (sample_set, id_to_cat) = load_sample_data(sys.argv[1])
     # TESTING: Reduce the number of samples
     # sample_set = filter_sample_set(sample_set)
-
+    Uncomment this section for original code.
     # Divide the samples into two, training and test. Keep 25% for test
     np.random.shuffle(sample_set)
     test_sample_count = int(sample_set.shape[0] / 4)
@@ -133,6 +192,11 @@ def main():
 
     print(confusion_matrix)
     confusion_matrix.report_stats()
+    '''
+
+    make_windows_experiment(sys.argv[1])
+    #run_everything(sys.argv[1])
+    
 
 if __name__ == '__main__':
     main()
