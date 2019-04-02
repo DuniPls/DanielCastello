@@ -194,8 +194,8 @@ def main():
     confusion_matrix.report_stats()
     '''
 
-    make_windows_experiment(sys.argv[1])
-    #run_everything(sys.argv[1])
+    #make_windows_experiment(sys.argv[1])
+    run_everything(sys.argv[1])
     
 
 if __name__ == '__main__':
