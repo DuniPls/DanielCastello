@@ -20,7 +20,6 @@ def shuffle_file(input):
     output.to_csv(target_file, sep=',')
     return target_file
 
-
 def main():
     '''
     Main shuffle driver. Read in data files, shuffle file.

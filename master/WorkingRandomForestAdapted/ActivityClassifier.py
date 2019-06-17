@@ -73,7 +73,7 @@ def load_sample_data(file_name):
             # individual measured. Since this data has perfect corrolation,
             # taking multiple is useless for classification. Take the last
             # one, Body Mass Index.
-            samples = [float(i) for i in mrow[2:(LABEL_INDEX-1)]]
+            samples = [float(i) for i in mrow[2:(LABEL_INDEX)]]
             samples.append(record_id) # Correct category becomes last column
             sample_set.append(samples)
     return (np.array(sample_set), id_to_cat)
@@ -116,16 +116,48 @@ def run_test(ids, test_set, forest):
     return CM
 
 def run_everything(set_name):
+    print("File name: " + set_name)
+    print("Loading file...")
     (sample_set, id_to_cat) = load_sample_data(set_name) # load data
+    print("Shuffling file...")
     np.random.shuffle(sample_set) # shuffle data
-    test_sample_count = int(sample_set.shape[0] / 5) # find how many samples equate to 20% of samples
-    test_samples = sample_set[:test_sample_count] # establish train set as first 80% of samples
-    training_samples = sample_set[test_sample_count:]# establish test set as las 20% of samples
+    test_sample_count = int(sample_set.shape[0] / 3) # find how many samples equate to 33% of samples
+    test_samples = sample_set[:test_sample_count] # establish test set as first 33% of samples
+    print("Test set size: " + str(len(test_samples)))
+    training_samples = sample_set[test_sample_count:]# establish train set as last 66% of samples
+    print("Train set size: " + str(len(training_samples)))
     sys.setrecursionlimit(5000) # Set the recursion limit very high so our computer doesn't think the random forest is an infinite loop
-    forest = run_train(training_samples, 7) # train the random forest with 7 trees
+    number_of_trees = 32
+    print("Number of trees: " + str(number_of_trees))
+    print("Training classifier...")
+    forest = run_train(training_samples, number_of_trees) # train the random forest with 7 trees
+    print("Testing classifier...")
     matrix = run_test(id_to_cat, test_samples, forest) # Create the confusion matrix from the random forest using the test set
+    print("Results:")
     print(matrix) # print the matrix
     matrix.report_stats() # print the confusion matrix precision/recall
+
+    
+def run_everything_with_testset(train, test):
+    (test_samples, id_to_cat_test) = load_sample_data(test) # load data
+    (training_samples, id_to_cat_train) = load_sample_data(train) # load data
+    test_set = test_samples[:]
+    train_set = training_samples[:]
+    np.random.shuffle(test_set) # shuffle data
+    np.random.shuffle(train_set) # shuffle data
+    sys.setrecursionlimit(5000) # Set the recursion limit very high so our computer doesn't think the random forest is an infinite loop
+    number_of_trees = 32
+    print(number_of_trees)
+    forest = run_train(train_set, number_of_trees) # train the random forest with 7 trees
+    matrix = run_test(id_to_cat_train, test_set, forest) # Create the confusion matrix from the random forest using the test set
+    print(matrix) # print the matrix
+    matrix.report_stats() # print the confusion matrix precision/recall
+
+def one_point_one(path):
+    for i in range(10, 101, 10):
+        name = (path + "1.1_shuffled_%dHZ_1000000samples.csv" % i)
+        run_everything(name)
+    print("End of experiment 1.1")
 
 def make_windows_experiment(set):
     '''
@@ -162,9 +194,6 @@ def main():
     Main classification driver. Read in data files, classify the sensor data
     they contain, and evaluate the performance of the classifier
     '''
-    if len(sys.argv) < 2:
-        print('USAGE: ActivityClassifier.py (path to data file)')
-        sys.exit(1)
 
     '''
     (sample_set, id_to_cat) = load_sample_data(sys.argv[1])
@@ -194,9 +223,12 @@ def main():
     confusion_matrix.report_stats()
     '''
 
-    #make_windows_experiment(sys.argv[1])
-    run_everything(sys.argv[1])
-    
+    #if(len(sys.argv) == 2):
+    #    one_point_one(sys.argv[1])
+    if(len(sys.argv) == 2):
+        run_everything(sys.argv[1])
+    if(len(sys.argv) == 3):
+        run_everything_with_testset(sys.argv[1], sys.argv[2])
 
 if __name__ == '__main__':
     main()

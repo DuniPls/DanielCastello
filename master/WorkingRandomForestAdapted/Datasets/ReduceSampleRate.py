@@ -170,6 +170,18 @@ def reduce_sample_rate_to_target(sample, target):
     print('Reading from: ', sample)
     open_and_filter_file(sample, target)
 
+def experimeronetwo(input):
+    for i in numpy.arange(0.1, 1.1, 0.1):
+        open_and_filter_file(input, str(i))
+        
+def experimeronefour(input):
+    for i in range(1, 101, 1):
+        open_and_filter_file(input, str(i))
+        
+def experimertwotwo(input):
+    for i in range(2, 101, 1):
+        open_and_filter_file(input, str(i))
+
 def limited_reduce_sample_rate_to_target(sample, target, limit):
     '''
     Use this function to setup a targeted sample rate reduction from 100 to target frequency.
@@ -217,6 +229,14 @@ def limited_windows_experiment(set):
 
  # endof setup functions
 
+def twofour():
+    for i in range(66, 91, 1):
+        base_input = ("2.2_%dHZ_windowed_discard_" % i)
+        for j in numpy.arange(1.5, 10.5, 0.5):
+            input = base_input + "%d_extracted.csv" % int(i * j)
+            for k in range(1, 11, 1):
+                open_and_filter_file(input, str(1/k * 100))
+
 def main():
     '''
     Main reduction driver. Read in data files, read in target rate,
@@ -251,13 +271,27 @@ def main():
         print('USAGE: ReduceSamplingRate.py (path to data file)')
         sys.exit(1)
     if len(sys.argv) < 3: # If no mode is provided e.g.(python Reduce.py dataset.csv)
-        print('USAGE: ReduceSamplingRate.py (mode of execution)')
-        sys.exit(1)
+        print('(mode of execution)')
+        print(sys.argv[0])
+        print(sys.argv[1])
+        mode_of_execution = sys.argv[1]
+        if(mode_of_execution == "twothree"):
+            twofour()
+        #sys.exit(1)
     sample_set = sys.argv[1]
     if len(sys.argv) >= 3: # If ony one argument is provided e.g.(python Reduce.py dataset.csv reduce100)
         mode_of_execution = sys.argv[2]
         if(mode_of_execution == "reduce100"):
             reduce_sample_rate_until_5(sample_set)
+
+        if(mode_of_execution == "onetwo"):
+            experimeronetwo(sample_set)
+            
+        if(mode_of_execution == "onefour"):
+            experimeronefour(sample_set)
+                        
+        if(mode_of_execution == "twotwo"):
+            experimertwotwo(sample_set)
 
         if(mode_of_execution == "reduce10"):
             reduce_sample_rate_until_1(sample_set)

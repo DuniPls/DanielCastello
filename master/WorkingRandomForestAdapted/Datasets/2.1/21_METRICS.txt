@@ -1,0 +1,60 @@
+data_textlabels_windowed_discard_50_extracted.csv
+Size	;	135541	;	66760
+Metrics	;	0.9453115638106651	;	0.9008151422222122	;	0.8126357034702201
+data_textlabels_windowed_discard_100_extracted.csv
+Size	;	67458	;	33227
+Metrics	;	0.949107653414392	;	0.8997562875996347	;	0.8153143229943927
+data_textlabels_windowed_discard_150_extracted.csv
+Size	;	44776	;	22054
+Metrics	;	0.9500770835222635	;	0.911793414476361	;	0.8234349753092725
+data_textlabels_windowed_discard_200_extracted.csv
+Size	;	33430	;	16467
+Metrics	;	0.9503248922086598	;	0.9075546086879747	;	0.8242216128084988
+data_textlabels_windowed_discard_250_extracted.csv
+Size	;	26633	;	13119
+Metrics	;	0.9461849226312982	;	0.9134739010608969	;	0.8161590765708607
+data_textlabels_windowed_discard_300_extracted.csv
+Size	;	22087	;	10879
+Metrics	;	0.9496277231363177	;	0.9122896586099508	;	0.811017425125346
+data_textlabels_windowed_discard_350_extracted.csv
+Size	;	18827	;	9273
+Metrics	;	0.9469427369783242	;	0.8782997437069688	;	0.830230921654116
+data_textlabels_windowed_discard_400_extracted.csv
+Size	;	16398	;	8077
+Metrics	;	0.9440386282035409	;	0.8779590835763796	;	0.8137571419365585
+data_textlabels_windowed_discard_450_extracted.csv
+Size	;	14535	;	7160
+Metrics	;	0.9466480446927374	;	0.9064533060467932	;	0.8161019933990371
+data_textlabels_windowed_discard_500_extracted.csv
+Size	;	13029	;	6418
+Metrics	;	0.9390775942661265	;	0.8918678843212943	;	0.7881737915203217
+data_textlabels_windowed_discard_550_extracted.csv
+Size	;	11780	;	5803
+Metrics	;	0.9434775116319145	;	0.8478222751412322	;	0.7823540211105773
+data_textlabels_windowed_discard_600_extracted.csv
+Size	;	10766	;	5304
+Metrics	;	0.9487179487179487	;	0.9349956063629856	;	0.8234856767889944
+data_textlabels_windowed_discard_650_extracted.csv
+Size	;	9914	;	4884
+Metrics	;	0.9459459459459459	;	0.8345536558504038	;	0.7941473183572934
+data_textlabels_windowed_discard_700_extracted.csv
+Size	;	9159	;	4512
+Metrics	;	0.9417109929078015	;	0.9406299223587675	;	0.7847096146016561
+data_textlabels_windowed_discard_750_extracted.csv
+Size	;	8527	;	4201
+Metrics	;	0.940490359438229	;	0.8974204277742628	;	0.7884463059505433
+data_textlabels_windowed_discard_800_extracted.csv
+Size	;	7960	;	3922
+Metrics	;	0.942886282508924	;	0.9032046146985506	;	0.789238008175337
+data_textlabels_windowed_discard_850_extracted.csv
+Size	;	7467	;	3679
+Metrics	;	0.9431910845338407	;	0.8904024092248056	;	0.804275582330774
+data_textlabels_windowed_discard_900_extracted.csv
+Size	;	7034	;	3465
+Metrics	;	0.9362193362193362	;	0.7928224491743288	;	0.7325324153698236
+data_textlabels_windowed_discard_950_extracted.csv
+Size	;	6635	;	3269
+Metrics	;	0.9427959620679107	;	0.8640110802711372	;	0.7820344534046597
+data_textlabels_windowed_discard_1000_extracted.csv
+Size	;	6282	;	3095
+Metrics	;	0.9418416801292407	;	0.9339853041017026	;	0.7980634486216298

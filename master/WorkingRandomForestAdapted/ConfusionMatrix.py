@@ -98,7 +98,7 @@ class ConfusionMatrix(object):
             print ('Category: {} Precision: {} Recall: {} Balanced F Statistic:'
                    ' {}'.format(cat, prec, rec, fstat))
 
-            print ('Overall: Precision: {}  Recall: {} Balanced F Statistic:'
+        print ('Overall: Precision: {}  Recall: {} Balanced F Statistic:'
                    ' {}'.format(precision.mean(), recall.mean(), f_statistic.mean()))
 
     def __str__(self):
