@@ -1,0 +1,2 @@
+# Paster's project
+This folder includes my master's thesis repository and final delivery, where I implemented a Random forest classifier in order to compare the effect of varying sampling rates in the precision and accuracy of a human activity recgnition system.
